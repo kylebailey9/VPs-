@@ -1,54 +1,42 @@
 # Frameflow Studio for Windows
 
-An original Electron desktop deliverable for Frameflow Studio. It reuses the Frameflow interface and browser-safe photo workflows, but runs as a local Windows application with native file dialogs, filesystem export, and print handoff.
+Frameflow Studio is an original, offline-first Windows photo workspace. It is inspired by the public user-facing workflow of PhotoLightning without using its code, branding, screenshots, or assets.
 
-## Privacy and storage boundary
+## Included coverage
 
-Frameflow stores imported photo blobs and metadata locally in the app's IndexedDB profile. The desktop shell has no application backend, photo server, remote database, automatic sync, telemetry, or background transfer. The seeded demo artwork is bundled with the app, so the initial workspace works offline.
+- Import individual images, folders, subfolders, and mounted camera or memory-card folders
+- Local camera capture when Windows grants camera permission
+- Duplicate-aware local import into browser IndexedDB
+- Thumbnail library, search, tags, favorites, selected sets, and chronological Photo History
+- Large inspector preview with captions, dates, file size, and local source information
+- Non-destructive edits: brightness, contrast, color, grayscale, sepia, soft focus, crop ratios, rotate, flip, watermark, and click-to-mark annotations
+- Batch captions, web-safe rename, local capture-date metadata, resize, crop, format conversion, JPEG quality, watermark, email, web, eBay, and print presets
+- Print preview with wallet, 3.5 x 5, 4 x 6, 5 x 7, and 8 x 10 choices, multi-up layouts, copies, and captions
+- Local HTML email drafts, ZIP share packages, Word/PowerPoint-compatible HTML handoffs, backup archives, thumbnail indexes, and self-contained HTML slideshows
+- Slideshow preview with play/pause, filmstrip navigation, timing, and local export
 
-Cloud and online-processor screens are handoff placeholders. Saving a destination stores only that setting locally. Frameflow does not contact it or upload photos unless a future provider-specific connector is separately added and the user explicitly configures and initiates that action. The current build only makes local exports, opens a user-directed email draft, opens an explicitly chosen processor page, or invokes Windows sharing when the OS provides it.
+## Privacy and security
 
-## Run from source
+Photo blobs and metadata stay in browser-local IndexedDB. No server, account, upload, sync, telemetry, analytics, or background transfer path is included. Exports are written only after an explicit save action, and edited exports are re-encoded so their original EXIF is not carried forward.
 
-```bash
-cd /home/user/photolightning-port-windows
-npm install
-npm run desktop
-```
+Electron keeps context isolation, sandboxing, web security, disabled Node integration, a narrow preload bridge, and a local-only CSP. The bridge exposes only native image selection, folder selection, explicit file saving, printing, and the local Pictures path.
 
-`npm run desktop:dev` rebuilds the local renderer and launches the same offline desktop shell. `npm run dev` runs the renderer in a browser for UI work.
-
-## Build a Windows installer
-
-Run this on Windows. This project already contains the Windows x64 NSIS configuration:
+## Build on Windows
 
 ```powershell
-cd C:\path\to\photolightning-port-windows
 npm install
+npm run build
 npm run package:win
 ```
 
-The NSIS installer is written to `release\` and creates Start Menu and optional desktop shortcuts. `npm run build` only creates the renderer bundle in `dist\`. The build uses `compression: store` to keep constrained build hosts from spending memory on installer compression.
+The installer is written to `release\Frameflow-Studio-Setup-0.1.0.exe`.
 
-## Desktop additions
+For source development:
 
-- Native Windows photo open dialog for JPG, PNG, WEBP, GIF, and BMP files
-- Native Save dialog for archive backups
-- Native Chromium print dialog, including physical printer or PDF selection
-- Electron preload bridge with context isolation, disabled Node integration, sandboxed renderer, and local-file loading
-- Bundled original demo artwork for offline startup
-- Existing local library, IndexedDB persistence, captions, tags, selection, history, slideshow, editing, annotations, red-eye spot assist, batch tools, ZIP exports, Office-compatible HTML exports, email draft handoff, camera permission flow, sharing, and integration placeholder screens
+```powershell
+npm run desktop:dev
+```
 
-## Windows-only limits
+## Deliberate boundaries
 
-- Direct printer status/control is outside the browser/Electron print API; printing goes through the Windows print dialog.
-- CD/DVD burning requires Windows or a native helper and is represented by archive export.
-- Camera capture depends on Windows camera permissions and an available camera.
-- Native Office automation, cloud provider APIs, email sending, and online processor uploads are intentionally not connected.
-- The app reads selected files into its local browser profile; it does not watch folders or sync them automatically.
-
-## Linux packaging result
-
-The renderer build and Windows payload staging completed in the sandbox. Electron Builder could not finish the NSIS installer here: the first full cross-package attempt was killed with exit 137 under the sandbox's approximately 1 GB RAM and no swap, and the resource-conscious prepackaged NSIS attempt stopped because Wine is not installed. No installer artifact was retained.
-
-The shortest Windows-side command is `npm install && npm run package:win`.
+Direct online photo-processor uploads, automatic email sending, Outlook/COM insertion, DPOF writes back to a memory card, optical CD/DVD burning, printer-vendor paper templates, and sound attached to slideshows require external services, Office or device APIs, or hardware-specific integrations. Frameflow provides local, explicit handoffs for those workflows instead of moving photo data in the background.
