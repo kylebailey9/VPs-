@@ -1,0 +1,62 @@
+{
+  "name": "frameflow-studio-windows",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "desktop": "npm run build && electron .",
+    "desktop:dev": "npm run build && electron .",
+    "package:win": "npm run build && electron-builder --win --x64"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "4.3.3",
+    "jszip": "3.10.1",
+    "lucide-react": "0.468.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "vite": "5.4.10"
+  },
+  "description": "Frameflow Studio offline Windows desktop photo workspace",
+  "main": "electron/main.cjs",
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "chat.frameflow.studio",
+    "productName": "Frameflow Studio",
+    "artifactName": "Frameflow-Studio-Setup-${version}.${ext}",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Frameflow-Studio-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "differentialPackage": false,
+      "deleteAppDataOnUninstall": false
+    },
+    "compression": "store"
+  }
+}
